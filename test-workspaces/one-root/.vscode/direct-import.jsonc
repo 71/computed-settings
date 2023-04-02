@@ -1,0 +1,6 @@
+{
+  "computed-settings.imports": [
+    "./indirect-import.jsonc"
+  ],
+  "files.defaultLanguage": "jsonc"
+}

@@ -1,0 +1,85 @@
+{
+  "name": "computed-settings",
+  "displayName": "computed-settings",
+  "description": "Dynamic VS Code settings",
+  "publisher": "gregoire",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.77.0"
+  },
+  "license": "MPL-2.0",
+  "categories": [
+    "Other"
+  ],
+  "extensionKind": [
+    "workspace"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "Workspace JavaScript configurations will not be loaded"
+    }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "computed-settings.mkJsonSchema",
+        "title": "Make JSON schema",
+        "enablement": "false"
+      }
+    ],
+    "configuration": {
+      "title": "Computed settings",
+      "properties": {
+        "computed-settings.imports": {
+          "type": "array",
+          "scope": "window",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "computed-settings.importInto": {
+          "type": "object",
+          "scope": "window",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "default": {}
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "yarn run compile",
+    "compile": "yarn run esbuild-base --define:DEV=false --minify",
+    "compile:wasm": "cargo build --release --target wasm32-unknown-unknown && wasm-bindgen --target web --out-dir out target/wasm32-unknown-unknown/release/nickel_js.wasm",
+    "esbuild-base": "esbuild src/extension.ts --bundle --loader:.wasm=file --loader:.json=file --platform=node --target=node16 --external:vscode --outdir=out",
+    "watch": "yarn run esbuild-base --define:DEV=true --sourcemap --watch",
+    "pretest": "yarn run compile && yarn run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.77.0",
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@typescript-eslint/parser": "^5.56.0",
+    "@vscode/test-electron": "^2.3.0",
+    "esbuild": "^0.17.14",
+    "eslint": "^8.36.0",
+    "glob": "^8.1.0",
+    "jsonc-parser": "^3.2.0",
+    "mocha": "^10.2.0",
+    "typescript": "^4.9.5"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "tasks": [
+    {
+      "label": "Foo",
+      "type": "shell"
+    }
+  ]
+}

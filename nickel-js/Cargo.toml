@@ -1,0 +1,15 @@
+[package]
+name = "nickel-js"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+js-sys = "0.3"
+nickel-lang = { version = "0.3", default-features = false }
+serde = "1.0.159"
+serde-wasm-bindgen = "0.5"
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"

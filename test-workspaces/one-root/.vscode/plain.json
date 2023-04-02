@@ -1,0 +1,5 @@
+{
+  "$schema": "./.computed-settings.schema.json",
+
+  "workbench.editor.enablePreview": true
+}
