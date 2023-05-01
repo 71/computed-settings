@@ -4,6 +4,10 @@
   "description": "Dynamic VS Code settings",
   "publisher": "gregoire",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/71/computed-settings"
+  },
   "engines": {
     "vscode": "^1.77.0"
   },
@@ -58,9 +62,9 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "yarn run compile",
+    "vscode:prepublish": "yarn run compile:wasm && yarn run compile",
     "compile": "yarn run esbuild-base --define:DEV=false --minify",
-    "compile:wasm": "cargo build --release --target wasm32-unknown-unknown && wasm-bindgen --target web --out-dir out target/wasm32-unknown-unknown/release/nickel_js.wasm",
+    "compile:wasm": "cargo build --release --target wasm32-unknown-unknown && cargo run --bin build-wasm -- target/wasm32-unknown-unknown/release/nickel_js.wasm out",
     "esbuild-base": "esbuild src/extension.ts --bundle --loader:.wasm=file --loader:.json=file --platform=node --target=node16 --external:vscode --outdir=out",
     "watch": "yarn run esbuild-base --define:DEV=true --sourcemap --watch",
     "pretest": "yarn run compile && yarn run lint",
@@ -75,6 +79,7 @@
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
     "@vscode/test-electron": "^2.3.0",
+    "@vscode/vsce": "^2.19.0",
     "esbuild": "^0.17.14",
     "eslint": "^8.36.0",
     "glob": "^8.1.0",
