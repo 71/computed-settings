@@ -226,3 +226,18 @@ export function registerForAllSettingsValues<
     }),
   );
 }
+
+/**
+ * Calls `register` with {@link vscode.DocumentSelector document selectors} that
+ * match JSON documents.
+ */
+export function registerForJsonDocuments(
+  context: vscode.ExtensionContext,
+  register: (selector: vscode.DocumentSelector) => vscode.Disposable,
+) {
+  for (const scheme of ["file", "vscode-userdata"]) {
+    for (const language of ["json", "jsonc"]) {
+      context.subscriptions.push(register({ scheme, language }));
+    }
+  }
+}

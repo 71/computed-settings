@@ -6,6 +6,7 @@ import {
   parseUri,
   readFile,
   registerForAllSettingsValues,
+  registerForJsonDocuments,
   resolveExtensionPath,
   writeFile,
 } from "./utils";
@@ -21,6 +22,8 @@ const JSON_SCHEMA_FILE_NAME = `${CONFIG_SECTION}.schema.json`;
 export function registerJsonSchemaIntelligence(
   context: vscode.ExtensionContext,
 ): void {
+  // Add completions: when the user starts typing "$schema" in a JSON file,
+  // suggest creating the schema.
   const completionItemProvider: vscode.CompletionItemProvider = {
     provideCompletionItems(document, position, _token, _context) {
       const textStartRange = document.positionAt(
@@ -68,6 +71,20 @@ export function registerJsonSchemaIntelligence(
     },
   };
 
+  registerForJsonDocuments(
+    context,
+    (documentSelector) =>
+      vscode.languages.registerCompletionItemProvider(
+        documentSelector,
+        completionItemProvider,
+        '"',
+        ":",
+        " ",
+      ),
+  );
+
+  // Add code action: when the user selects the generated schema, suggest
+  // updating it.
   const codeActionProvider: vscode.CodeActionProvider = {
     provideCodeActions(document, range, context, _token) {
       if (
@@ -131,7 +148,17 @@ export function registerJsonSchemaIntelligence(
     },
   };
 
+  registerForJsonDocuments(
+    context,
+    (documentSelector) =>
+      vscode.languages.registerCodeActionsProvider(
+        documentSelector,
+        codeActionProvider,
+      ),
+  );
+
   context.subscriptions.push(
+    // Register the command that generates or updates schemas.
     vscode.commands.registerCommand(
       MK_JSON_SCHEMA_COMMAND_ID,
       async ({ path }: { path: vscode.Uri }) => {
@@ -145,25 +172,12 @@ export function registerJsonSchemaIntelligence(
         }
       },
     ),
+    // Clear cache when an extension is added or removed, since the schema takes
+    // extension settings into account.
     vscode.extensions.onDidChange(() => cachedJsonSchema = undefined),
   );
 
-  for (const language of ["json", "jsonc"]) {
-    context.subscriptions.push(
-      vscode.languages.registerCompletionItemProvider(
-        { scheme: "file", language },
-        completionItemProvider,
-        '"',
-        ":",
-        " ",
-      ),
-      vscode.languages.registerCodeActionsProvider(
-        { scheme: "file", language },
-        codeActionProvider,
-      ),
-    );
-  }
-
+  // Watch `json.schemas` to know when generated schemas should be created.
   registerForAllSettingsValues(context, {
     ["json.schemas"](
       schemas: { url: string }[] | undefined,

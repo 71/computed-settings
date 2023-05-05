@@ -29,17 +29,12 @@
     }
   },
   "contributes": {
-    "commands": [
-      {
-        "command": "computed-settings.mkJsonSchema",
-        "title": "Make JSON schema",
-        "enablement": "false"
-      }
-    ],
     "configuration": {
       "title": "Computed settings",
       "properties": {
         "computed-settings.imports": {
+          "title": "Specifies paths of configuration files that should be merged and imported into this file.",
+          "markdownDescription": "`.json`, `.jsonc` and `.ncl` files can be imported. Paths may contain [`${command:...}`](https://code.visualstudio.com/docs/editor/variables-reference#_command-variables) and [`${env:...}`](https://code.visualstudio.com/docs/editor/variables-reference#_environment-variables) variables, and are resolved relatively to the workspace root (for workspace preferences) or to the [`settings.json` file](https://code.visualstudio.com/docs/getstarted/settings#_settings-file-locations) (for user preferences).",
           "type": "array",
           "scope": "window",
           "items": {
@@ -48,6 +43,7 @@
           "default": []
         },
         "computed-settings.importInto": {
+          "title": "Specifies a mapping from JSON files to lists of JSON file that should be imported into them, similarly to `#computed-settings.imports#`.",
           "type": "object",
           "scope": "window",
           "additionalProperties": {
