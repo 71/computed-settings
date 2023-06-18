@@ -62,6 +62,21 @@ Please note:
 
 ### JSON Schema generation
 
+Note: I wrote this not knowing that settings schemas can be used directly from
+arbitrary JSON files, so the section below is mostly useless. When editing
+settings, use one of the following schemas:
+
+- `vscode://schemas/settings/folder`
+- `vscode://schemas/keybindings`
+
+Other schemas are also available, and listed in the "Feature contributions" tab
+of the "Configuration Editing" built-in extension
+(`vscode.configuration-editing`).
+
+<details>
+
+<summary>Old documentation</summary>
+
 [JSON Schemas](https://json-schema.org) corresponding to the possible
 configuration values can be generated and written to the disk.
 
@@ -95,6 +110,8 @@ There are two ways to generate the configuration on disk:
 > and combining them with the configuration options provided by the currently
 > loaded extensions. If extensions change or if the included VS Code config
 > schema is out of date, the generated schema may not entirely be accurate.
+
+</details>
 
 ## Partial features
 
